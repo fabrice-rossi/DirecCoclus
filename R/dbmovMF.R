@@ -53,7 +53,7 @@ dbmovMF<- function(X,k,control=list(),...){
 		n_init = control$n_init
 
 	if(is.null(control$tol))
-		tol = 1e-6
+		tol = sqrt(.Machine$double.eps)
 	else
 		tol = control$tol
 
@@ -283,7 +283,7 @@ dbmovMF<- function(X,k,control=list(),...){
 			etp[iter] = -sum(Z@x*log(Z@x))
 
 			if(iter > 1){
-				if(abs(ll[iter] - ll[iter-1]) <tol){
+				if(abs(ll[iter] - ll[iter-1]) <tol*(abs(ll[iter-1]+tol))){
 					nbIter = iter
 					break
 				}
