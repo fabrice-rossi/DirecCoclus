@@ -194,7 +194,7 @@ dbmovMF<- function(X,k,control=list(),...){
 
 
 		#row centroids MU^z
-		Mu_h = diag(1/sqrt(table(col_c)))
+		Mu_h = diag(1/sqrt(tabulate(col_c, nbins=k)))
 		Mu_h = as(Mu_h,"dgCMatrix")
 
 		alpha = (vr1%*%Z)/n #row cluster proportions, matrix of size (1*k)
@@ -235,7 +235,7 @@ dbmovMF<- function(X,k,control=list(),...){
 			col_partition = apply(W,1,which.max)
 
 			#update Mu_h
-			Mu_h = Matrix::diag(1/sqrt(table(col_partition)))
+			Mu_h = Matrix::diag(1/sqrt(tabulate(col_partition, nbins=k)))
 			Mu_h = as(Mu_h,"dgCMatrix")
 
 			#update alpha
