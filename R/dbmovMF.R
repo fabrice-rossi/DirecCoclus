@@ -282,6 +282,12 @@ dbmovMF<- function(X,k,control=list(),...){
 			ll[iter] = sum(Z*logZt)
 			etp[iter] = -sum(Z@x*log(Z@x))
 
+                        if(is.na(ll[iter])) {
+                            warning("Convergence problem")
+                            nbIter = iter
+                            break
+                        }
+                        
 			if(iter > 1){
 				if(abs(ll[iter] - ll[iter-1]) <tol*(abs(ll[iter-1]+tol))){
 					nbIter = iter
