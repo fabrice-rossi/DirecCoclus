@@ -90,7 +90,6 @@ dbmovMF<- function(X,k,control=list(),...){
 		row_init = control$row_init
 		control$row_init = NULL #to save memory space
 	}
-
 	if(is.null(control$col_init))
 		col_init = NULL
 	else{
@@ -180,7 +179,8 @@ dbmovMF<- function(X,k,control=list(),...){
 
 	#perform one run
 	do_one <- function(row_c,col_c){
-
+            
+                convergence <- TRUE
 		#Compute initial binary row-cluster indicator matrix
 		Z = matrix(0,n,k)
 		Z = as(Z,"dgCMatrix")
@@ -288,8 +288,8 @@ dbmovMF<- function(X,k,control=list(),...){
 			etp[iter] = -sum(Z@x*log(Z@x))
 
                         if(is.na(ll[iter])) {
-                            warning("Convergence problem")
-                            nbIter = iter
+                            convergence <- FALSE
+                            nbIter <- iter
                             break
                         }
                         
@@ -301,7 +301,9 @@ dbmovMF<- function(X,k,control=list(),...){
 			}
 		}
 		row_partition = apply(Z,1,which.max)
-		structure(list(rowcluster = row_partition,colcluster = col_partition,kappa_ = kap,alpha=alpha, ll = ll,iter = nbIter))
+		structure(list(rowcluster = row_partition,colcluster =
+                                   col_partition,kappa_ = kap,alpha=alpha,
+                                   ll = ll, iter = nbIter, convergence = convergence))
 
 	#End of do_one
 	}
@@ -338,7 +340,7 @@ dbmovMF<- function(X,k,control=list(),...){
 	#Perform run(s)
 	run <- do_one(row_c,col_c)
 	best <- run$ll[run$iter]
-	index_best = 1;
+	index_best = 1
 
 	ll_runs[1] = run$ll[run$iter]
 	#in case of multiple runs
