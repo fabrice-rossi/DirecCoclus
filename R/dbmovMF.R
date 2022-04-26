@@ -207,7 +207,7 @@ dbmovMF<- function(X,k,control=list(),...){
 			#X_z_w (k*k): compressed X according to row and column clusters
 			X_z_w = Matrix::crossprod(X_w,Z)
 			r_bar = Matrix::diag(X_z_w)
-			r_bar = r_bar/((alpha[1,]*n)*sqrt(nc[1,]))
+			r_bar = abs(r_bar)/((alpha[1,]*n)*sqrt(nc[1,]))
 			kap = (r_bar*d - r_bar^3)/(1-r_bar^2) #vector containing clusters' kappa parameters
 			#kap = rep(10,k)
 		}
@@ -249,11 +249,16 @@ dbmovMF<- function(X,k,control=list(),...){
 				#X_z_w (k*k): compressed X according to row and column clusters
 				X_z_w = Matrix::crossprod(X_w,Z)
 				r_bar = Matrix::diag(X_z_w)
-				r_bar = r_bar/((alpha[1,]*n)*sqrt(nc[1,]))
+				r_bar = abs(r_bar)/((alpha[1,]*n)*sqrt(nc[1,]))
 				kap = (r_bar*d - r_bar^3)/(1-r_bar^2) #vector containing clusters' kappa parameters
 				KAP = as(Matrix::diag(kap),"dgCMatrix")
 			}
-
+                        if(anyNA(kap)) {
+                            convergence <- FALSE
+                            nbIter <- iter
+                            ll[iter] <- NA
+                            break
+                        }
 
 			#E-step
 
