@@ -368,11 +368,11 @@ dbmovMF<- function(X,k,control=list(),...){
 			ll_runs[i] = rrun$ll[rrun$iter]
 			#update best run is necessary
 			if(!is.na(rrun$ll[rrun$iter])){
-				if(rrun$ll[rrun$iter] > best){
-					run <- rrun
-					best <- run$ll[run$iter]
-					index_best = i
-				}
+                            if(is.na(best) | rrun$ll[rrun$iter] > best){
+                                run <- rrun
+                                best <- run$ll[run$iter]
+                                index_best = i
+                            }
 			}
 		}
 	#end of runs
